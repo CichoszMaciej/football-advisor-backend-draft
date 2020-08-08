@@ -3,9 +3,11 @@ package com.softylabs.services;
 import com.softylabs.dto.FixtureDTO;
 import com.softylabs.dto.LeagueDTO;
 import com.softylabs.dto.TeamDTO;
+import com.softylabs.dto.TopScorerDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +18,7 @@ public class UpdateDataService {
     private final LeagueService leagueService;
     private final FixtureService fixtureService;
     private final ExternalApiService externalApiService;
+    private final TopScorersService topScorersService;
 
     public List<LeagueDTO> updateLeagues() {
         return leagueService.saveAll(externalApiService.getLeagues());
@@ -35,5 +38,22 @@ public class UpdateDataService {
         List<TeamDTO> teamsList = teamService.findAllWithIds();
 
         return fixtureService.saveAll(externalApiService.getFixtures(leagueDTOList, teamsList));
+    }
+
+    public List<TopScorerDTO> updateTopScorers() {
+        List<LeagueDTO> leagueDTOList = leagueService.findAllWithIds();
+        List<TopScorerDTO> topScorerFromLeagueDTOList = new ArrayList<>();
+        List<TopScorerDTO> topScorerDTOList = new ArrayList<>();
+        leagueDTOList.forEach(leagueDTO -> {
+            topScorerFromLeagueDTOList.addAll(externalApiService.getTopScorersByLeague(leagueDTO.getLeagueId()));
+            topScorerFromLeagueDTOList.forEach(topScorerDTO -> topScorerDTO.setLeagueId(leagueDTO.getLeagueId()));
+            topScorerDTOList.addAll(topScorerFromLeagueDTOList);
+            topScorerFromLeagueDTOList.clear();
+        });
+        return topScorersService.saveAll(topScorerDTOList);
+    }
+
+    public List<TopScorerDTO> updateTopScorersByLeague(Long leagueId) {
+        return topScorersService.saveAll(externalApiService.getTopScorersByLeague(leagueId));
     }
 }

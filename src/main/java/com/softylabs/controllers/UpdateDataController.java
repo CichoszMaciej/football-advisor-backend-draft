@@ -3,6 +3,7 @@ package com.softylabs.controllers;
 import com.softylabs.dto.FixtureDTO;
 import com.softylabs.dto.LeagueDTO;
 import com.softylabs.dto.TeamDTO;
+import com.softylabs.dto.TopScorerDTO;
 import com.softylabs.services.UpdateDataService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,5 +41,15 @@ public class UpdateDataController {
     @GetMapping("/fixtures")
     public List<FixtureDTO> updateFixturesByLeagueId() {
         return updateDataService.updateFixtures();
+    }
+
+    @GetMapping("/top-scorers")
+    public List<TopScorerDTO> updateTopScorers() {
+        return updateDataService.updateTopScorers();
+    }
+
+    @GetMapping("/top-scorers/{leagueId}")
+    public List<TopScorerDTO> updateTopScorersByLeague(@PathVariable Long leagueId) {
+        return updateDataService.updateTopScorersByLeague(leagueId);
     }
 }

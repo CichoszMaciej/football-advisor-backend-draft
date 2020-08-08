@@ -1,7 +1,9 @@
 package com.softylabs.controllers;
 
 import com.softylabs.dto.TeamDTO;
+import com.softylabs.dto.TopScorerDTO;
 import com.softylabs.services.TeamService;
+import com.softylabs.services.TopScorersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TeamController {
     private final TeamService teamService;
+    private final TopScorersService topScorersService;
 
     @GetMapping("/")
     public List<TeamDTO> findAllTeams() {
@@ -32,5 +35,10 @@ public class TeamController {
     @GetMapping("/league/{league_id}")
     public List<TeamDTO> findTeamsByLeagueId(@PathVariable("league_id") Long leagueId) {
         return teamService.findByLeagueId(leagueId);
+    }
+
+    @GetMapping("/top-scorers/{league_id}")
+    public List<TopScorerDTO> findTopScorersByLeagueId(@PathVariable("league_id") Long leagueId) {
+        return topScorersService.findTopScorersByLeague(leagueId);
     }
 }

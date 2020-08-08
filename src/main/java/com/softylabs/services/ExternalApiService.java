@@ -3,12 +3,15 @@ package com.softylabs.services;
 import com.softylabs.dto.FixtureDTO;
 import com.softylabs.dto.LeagueDTO;
 import com.softylabs.dto.TeamDTO;
+import com.softylabs.dto.TopScorerDTO;
 import com.softylabs.mappers.FixtureMapper;
 import com.softylabs.mappers.LeagueMapper;
 import com.softylabs.mappers.TeamMapper;
+import com.softylabs.mappers.TopScorerMapper;
 import com.softylabs.models.api.fixtures.ApiFixturesResponse;
 import com.softylabs.models.api.league.ApiLeagueResponse;
 import com.softylabs.models.api.teams.ApiTeamsResponse;
+import com.softylabs.models.api.topscorers.ApiTopScorerResponse;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -109,6 +112,17 @@ public class ExternalApiService {
         return fixtureDTOList;
     }
 
+    public List<TopScorerDTO> getTopScorersByLeague(Long leagueId) {
+        HttpEntity httpEntity = new HttpEntity(getDefaultHeaders());
+        ResponseEntity<ApiTopScorerResponse> response = restTemplate.exchange(
+                buildTopScorersURL(leagueId),
+                HttpMethod.GET,
+                httpEntity,
+                ApiTopScorerResponse.class
+        );
+        return TopScorerMapper.mapToDtoListFromApiResponse(Objects.requireNonNull(response.getBody()));
+    }
+
     private List<Long> getLeaguesIdsAsList() {
         return Arrays.stream(leaguesIdsAsString.split(","))
                 .map(Long::parseLong)
@@ -133,5 +147,9 @@ public class ExternalApiService {
 
     private String buildFixturesURL(Long leagueId) {
         return apiUrl + "fixtures/league/" + leagueId;
+    }
+
+    private String buildTopScorersURL(Long leagueId) {
+        return apiUrl + "topscorers/" + leagueId;
     }
 }

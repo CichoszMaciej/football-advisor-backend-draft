@@ -61,12 +61,14 @@ public class FixtureMapper {
                 .elapsed(fixture.getElapsed())
                 .goalsHomeTeam(fixture.getGoalsHomeTeam())
                 .goalsAwayTeam(fixture.getGoalsAwayTeam())
-                .homeTeam(TeamMapper.mapToDtoWithId(fixture.getHomeTeam()))
-                .awayTeam(TeamMapper.mapToDtoWithId(fixture.getAwayTeam()))
+                .homeTeam(TeamMapper.mapToDtoWithIdWithoutLeague(fixture.getHomeTeam()))
+                .awayTeam(TeamMapper.mapToDtoWithIdWithoutLeague(fixture.getAwayTeam()))
                 .scoreHalfTime(fixture.getScoreHalfTime())
                 .scoreFullTime(fixture.getScoreFullTime())
                 .build();
     }
+
+
 
     public static List<FixtureDTO> mapToDtoListFromApiResponse(ApiFixturesResponse apiFixturesResponse,
                                                                LeagueDTO leagueDTO, List<TeamDTO> teamDTOList) {

@@ -50,6 +50,24 @@ public class TeamMapper {
                 .build();
     }
 
+    public static TeamDTO mapToDtoWithIdWithoutLeague(Team team) {
+        return TeamDTO.builder()
+                .teamId(team.getTeamId())
+                .teamName(team.getTeamName())
+                .rank(team.getRank())
+                .points(team.getPoints())
+                .logoUrl(team.getLogoUrl())
+                .form(team.getForm())
+                .winCount(team.getWinCount())
+                .loseCount(team.getLoseCount())
+                .drawCount(team.getDrawCount())
+                .goalsAgainst(team.getGoalsAgainst())
+                .goalsFor(team.getGoalsFor())
+                .goalsDiff(team.getGoalsDiff())
+                .matchesPlayed(team.getMatchesPlayed())
+                .build();
+    }
+
     public static TeamDTO mapFromApiToDto(TeamFromAPI teamFromAPI) {
         return TeamDTO.builder()
                 .teamId(teamFromAPI.getTeamId())

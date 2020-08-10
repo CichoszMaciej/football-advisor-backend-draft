@@ -3,9 +3,9 @@ package com.softylabs.services;
 import com.softylabs.dao.FixtureRepository;
 import com.softylabs.dto.FixtureDTO;
 import com.softylabs.mappers.FixtureMapper;
-import com.softylabs.mappers.LeagueMapper;
 import com.softylabs.models.entity.Fixture;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class FixtureService {
     private final FixtureRepository fixtureRepository;
 
-    public List<FixtureDTO> findAll() {
-        return fixtureRepository.findAll()
+    public List<FixtureDTO> findAll(Pageable pageable) {
+        return fixtureRepository.findAll(pageable)
                 .stream()
                 .map(FixtureMapper::mapToDtoWithId)
                 .collect(Collectors.toList());
@@ -27,8 +27,47 @@ public class FixtureService {
     public List<FixtureDTO> findLastFixturesByTeamId(Long teamId) {
         OffsetDateTime dateTimeNow = OffsetDateTime.now();
 
-        return fixtureRepository.findByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateLessThanEqual(teamId, teamId,
+        return fixtureRepository.findFirst5ByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateLessThanEqualOrderByEventDateDesc(teamId, teamId,
                 dateTimeNow).stream()
+                .map(FixtureMapper::mapToDtoWithId)
+                .collect(Collectors.toList());
+    }
+
+    public List<FixtureDTO> findLastFixturesByLeagueId(Long leagueId) {
+        OffsetDateTime dateTimeNow = OffsetDateTime.now();
+
+        return fixtureRepository.findFirst10ByLeague_LeagueIdAndEventDateLessThanEqualOrderByEventDateDesc(leagueId,
+                dateTimeNow)
+                .stream()
+                .map(FixtureMapper::mapToDtoWithId)
+                .collect(Collectors.toList());
+    }
+
+    public List<FixtureDTO> findNextFixturesByTeamId(Long teamId) {
+        OffsetDateTime dateTimeNow = OffsetDateTime.now();
+
+        return fixtureRepository.findFirst5ByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateGreaterThanEqualOrderByEventDate
+                (teamId, teamId, dateTimeNow)
+                .stream()
+                .map(FixtureMapper::mapToDtoWithId)
+                .collect(Collectors.toList());
+    }
+
+    public List<FixtureDTO> findNextFixturesByLeagueId(Long leagueId) {
+        OffsetDateTime dateTimeNow = OffsetDateTime.now();
+
+        return fixtureRepository.findFirst10ByLeague_LeagueIdAndEventDateGreaterThanEqualOrderByEventDate(leagueId,
+                dateTimeNow)
+                .stream()
+                .map(FixtureMapper::mapToDtoWithId)
+                .collect(Collectors.toList());
+    }
+
+    public List<FixtureDTO> find10NextFixturesFromAllLeague() {
+        OffsetDateTime dateTimeNow = OffsetDateTime.now();
+
+        return fixtureRepository.findFirst10ByEventDateGreaterThanEqualOrderByEventDate(dateTimeNow)
+                .stream()
                 .map(FixtureMapper::mapToDtoWithId)
                 .collect(Collectors.toList());
     }

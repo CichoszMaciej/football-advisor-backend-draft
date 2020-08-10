@@ -13,6 +13,18 @@ public interface FixtureRepository extends JpaRepository<Fixture, Long> {
 
     List<Fixture> findByLeague_LeagueId(Long leagueId);
 
-    List<Fixture> findByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateLessThanEqual(Long teamId, Long teamId2,
-                                                                                  OffsetDateTime dateTime);
+    List<Fixture> findFirst5ByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateLessThanEqualOrderByEventDateDesc(Long teamId, Long teamId2,
+                                                                                                            OffsetDateTime dateTime);
+
+    List<Fixture> findFirst10ByLeague_LeagueIdAndEventDateLessThanEqualOrderByEventDateDesc(Long leagueId,
+                                                                                            OffsetDateTime dateTime);
+
+    List<Fixture> findFirst5ByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateGreaterThanEqualOrderByEventDate(Long teamId, Long teamId2,
+                                                                                                           OffsetDateTime dateTime);
+
+    List<Fixture> findFirst10ByLeague_LeagueIdAndEventDateGreaterThanEqualOrderByEventDate(Long leagueId,
+                                                                                           OffsetDateTime dateTime);
+
+    List<Fixture> findFirst10ByEventDateGreaterThanEqualOrderByEventDate(OffsetDateTime dateTime);
+
 }

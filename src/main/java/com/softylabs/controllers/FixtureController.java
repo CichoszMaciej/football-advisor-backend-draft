@@ -49,7 +49,7 @@ public class FixtureController {
 
     @GetMapping("/next/league/{leagueId}")
     public List<FixtureDTO> findNextFixturesByLeagueId(@PathVariable("leagueId") Long leagueId) {
-        return fixtureService.findLastFixturesByLeagueId(leagueId);
+        return fixtureService.findNextFixturesByLeagueId(leagueId);
     }
 
     @GetMapping("/next")

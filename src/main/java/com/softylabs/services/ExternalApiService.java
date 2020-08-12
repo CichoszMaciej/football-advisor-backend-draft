@@ -10,6 +10,7 @@ import com.softylabs.mappers.TeamMapper;
 import com.softylabs.mappers.TopScorerMapper;
 import com.softylabs.models.api.fixtures.ApiFixturesResponse;
 import com.softylabs.models.api.league.ApiLeagueResponse;
+import com.softylabs.models.api.predictions.ApiPredictionsResponse;
 import com.softylabs.models.api.teams.ApiTeamsResponse;
 import com.softylabs.models.api.topscorers.ApiTopScorerResponse;
 import lombok.extern.java.Log;
@@ -112,6 +113,17 @@ public class ExternalApiService {
         return fixtureDTOList;
     }
 
+    public ApiPredictionsResponse getPrediction(Long matchId) {
+        HttpEntity httpEntity = new HttpEntity(getDefaultHeaders());
+        ResponseEntity<ApiPredictionsResponse> response = restTemplate.exchange(
+                buildPredictionsURL(matchId),
+                HttpMethod.GET,
+                httpEntity,
+                ApiPredictionsResponse.class
+        );
+        return response.getBody();
+    }
+
     public List<TopScorerDTO> getTopScorersByLeague(Long leagueId) {
         HttpEntity httpEntity = new HttpEntity(getDefaultHeaders());
         ResponseEntity<ApiTopScorerResponse> response = restTemplate.exchange(
@@ -148,6 +160,8 @@ public class ExternalApiService {
     private String buildFixturesURL(Long leagueId) {
         return apiUrl + "fixtures/league/" + leagueId;
     }
+
+    private String buildPredictionsURL(Long matchId) { return apiUrl + "predictions/" + matchId; }
 
     private String buildTopScorersURL(Long leagueId) {
         return apiUrl + "topscorers/" + leagueId;

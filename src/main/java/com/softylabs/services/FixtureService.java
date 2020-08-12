@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +21,7 @@ public class FixtureService {
     public List<FixtureDTO> findAll(Pageable pageable) {
         return fixtureRepository.findAll(pageable)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
@@ -29,7 +30,7 @@ public class FixtureService {
 
         return fixtureRepository.findFirst5ByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateLessThanEqualOrderByEventDateDesc(teamId, teamId,
                 dateTimeNow).stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +40,7 @@ public class FixtureService {
         return fixtureRepository.findFirst10ByLeague_LeagueIdAndEventDateLessThanEqualOrderByEventDateDesc(leagueId,
                 dateTimeNow)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +50,7 @@ public class FixtureService {
         return fixtureRepository.findFirst5ByHomeTeam_TeamIdOrAwayTeam_TeamIdAndEventDateGreaterThanEqualOrderByEventDate
                 (teamId, teamId, dateTimeNow)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +60,7 @@ public class FixtureService {
         return fixtureRepository.findFirst10ByLeague_LeagueIdAndEventDateGreaterThanEqualOrderByEventDate(leagueId,
                 dateTimeNow)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
@@ -68,32 +69,38 @@ public class FixtureService {
 
         return fixtureRepository.findFirst10ByEventDateGreaterThanEqualOrderByEventDate(dateTimeNow)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
     public List<FixtureDTO> findFixturesByLeagueId(Long leagueId) {
         return fixtureRepository.findByLeague_LeagueId(leagueId)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 
     public List<FixtureDTO> findFixturesByTwoTeams(Long firstTeamId, Long secondTeamId) {
         List<FixtureDTO> fixtureDTOList = fixtureRepository.findByHomeTeam_TeamIdAndAwayTeam_TeamId(firstTeamId, secondTeamId)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
 
         List<FixtureDTO> secondFixtureDTOList = fixtureRepository.findByHomeTeam_TeamIdAndAwayTeam_TeamId(secondTeamId,
                 firstTeamId)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
 
         fixtureDTOList.addAll(secondFixtureDTOList);
 
         return fixtureDTOList;
+    }
+
+    public FixtureDTO findById(Long matchId) {
+        Optional<Fixture> fixture = fixtureRepository.findById(matchId);
+
+        return fixture.map(FixtureMapper::mapToDto).orElse(null);
     }
 
     public List<FixtureDTO> saveAll(List<FixtureDTO> fixtureDTOList) {
@@ -103,7 +110,7 @@ public class FixtureService {
 
         return fixtureRepository.saveAll(fixtures)
                 .stream()
-                .map(FixtureMapper::mapToDtoWithId)
+                .map(FixtureMapper::mapToDtoTeamWithoutLeague)
                 .collect(Collectors.toList());
     }
 }

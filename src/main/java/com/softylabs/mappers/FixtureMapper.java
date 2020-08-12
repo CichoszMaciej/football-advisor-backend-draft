@@ -51,7 +51,7 @@ public class FixtureMapper {
         return fixture;
     }
 
-    public static FixtureDTO mapToDtoWithId(Fixture fixture) {
+    public static FixtureDTO mapToDtoTeamWithoutLeague(Fixture fixture) {
         return FixtureDTO.builder()
                 .matchId(fixture.getMatchId())
                 .league(LeagueMapper.mapToDtoWithId(fixture.getLeague()))
@@ -63,6 +63,23 @@ public class FixtureMapper {
                 .goalsAwayTeam(fixture.getGoalsAwayTeam())
                 .homeTeam(TeamMapper.mapToDtoWithIdWithoutLeague(fixture.getHomeTeam()))
                 .awayTeam(TeamMapper.mapToDtoWithIdWithoutLeague(fixture.getAwayTeam()))
+                .scoreHalfTime(fixture.getScoreHalfTime())
+                .scoreFullTime(fixture.getScoreFullTime())
+                .build();
+    }
+
+    public static FixtureDTO mapToDto(Fixture fixture) {
+        return FixtureDTO.builder()
+                .matchId(fixture.getMatchId())
+                .league(LeagueMapper.mapToDtoWithId(fixture.getLeague()))
+                .eventDate(fixture.getEventDate())
+                .status(fixture.getStatus())
+                .statusShort(fixture.getStatusShort())
+                .elapsed(fixture.getElapsed())
+                .goalsHomeTeam(fixture.getGoalsHomeTeam())
+                .goalsAwayTeam(fixture.getGoalsAwayTeam())
+                .homeTeam(TeamMapper.mapToDtoWithId(fixture.getHomeTeam()))
+                .awayTeam(TeamMapper.mapToDtoWithId(fixture.getAwayTeam()))
                 .scoreHalfTime(fixture.getScoreHalfTime())
                 .scoreFullTime(fixture.getScoreFullTime())
                 .build();
